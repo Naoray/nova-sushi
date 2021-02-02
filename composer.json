@@ -9,11 +9,14 @@
     "license": "MIT",
     "require": {
         "php": "^7.3|^8.0",
+        "calebporzio/sushi": "^2.1",
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^8.12",
-        "laravel/tinker": "^2.5"
+        "laravel/nova": "^3.21",
+        "laravel/tinker": "^2.5",
+        "mollie/laravel-mollie": "^2.14"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -58,5 +61,11 @@
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
         ]
-    }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://nova.laravel.com"
+        }
+    ]    
 }
