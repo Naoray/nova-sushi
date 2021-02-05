@@ -5,12 +5,15 @@ namespace App\Models;
 use Sushi\Sushi;
 use Mollie\Laravel\Facades\Mollie;
 use Illuminate\Database\Eloquent\Model;
+use League\Fractal\TransformerAbstract;
+use App\Transformers\CustomerTransformer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Customer extends Model
 {
-    use HasFactory;
     use Sushi;
+    use HasFactory;
+    use HasMollieAccess;
 
     const CREATED_AT = 'createdAt';
 
@@ -21,37 +24,24 @@ class Customer extends Model
 
     protected $keyType = 'string';
 
-    protected $fillable = ['name', 'email'];
+    protected $fillable = [
+        'id',
+        'name',
+        'email',
+        'dashboard_link',
+    ];
 
-    public static function booted()
+    protected function transformer(): TransformerAbstract
     {
-        // static::addGlobalScope('null-id', function ($builder) {
-        //     $builder->whereKeyNot(null);
-        // });
+        return new CustomerTransformer;
     }
 
     public function getRows()
     {
-        return collect(Mollie::api()->customers()->page())
-            ->map(fn ($customerData) => [
-                'id' => $customerData->id,
-                'name' => $customerData->name,
-                'email' => $customerData->email,
-                'dashboard_link' => $customerData->_links->dashboard->href,
-            ])
-            ->all();
-    }
+        $data = request()->has('page') && request()->has('perPage')
+            ? Mollie::api()->customers()->page()
+            : Mollie::api()->customers()->page(request('page'), request('perPage'));
 
-    /**
-     * Returns all keys of the stripe object.
-     */
-    protected function keys(): array
-    {
-        return [
-            'id',
-            'name',
-            'email',
-            'dashboard_link',
-        ];
+        return $this->transformToArray(Mollie::api()->customers()->page(request('page') ?? null,  ?? null));
     }
 }

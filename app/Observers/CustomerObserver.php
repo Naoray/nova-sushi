@@ -19,8 +19,6 @@ class CustomerObserver
             'name'  => $customer->name,
             'email' => $customer->email,
         ]);
-
-        return false;
     }
 
     /**
@@ -29,41 +27,19 @@ class CustomerObserver
      * @param  \App\Models\Customer  $customer
      * @return void
      */
-    public function updated(self $customer)
+    public function updated(Customer $customer)
     {
         //
     }
 
     /**
-     * Handle the Customer "deleted" event.
+     * Handle the Customer "deleting" event.
      *
      * @param  \App\Models\Customer  $customer
      * @return void
      */
-    public function deleted(self $customer)
+    public function deleting(Customer $customer)
     {
-        //
-    }
-
-    /**
-     * Handle the Customer "restored" event.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return void
-     */
-    public function restored(self $customer)
-    {
-        //
-    }
-
-    /**
-     * Handle the Customer "force deleted" event.
-     *
-     * @param  \App\Models\Customer  $customer
-     * @return void
-     */
-    public function forceDeleted(self $customer)
-    {
-        //
+        Mollie::api()->customers()->delete($customer->id);
     }
 }
