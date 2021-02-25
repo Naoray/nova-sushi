@@ -44,10 +44,6 @@ class Customer extends Resource
 
             Text::make('Name'),
             Text::make('Email'),
-
-            Text::make('', function () {
-                return "<a href='{$this->dashboard_link}'>View On Mollie</a>";
-            })->asHtml(),
         ];
     }
 
@@ -94,4 +90,11 @@ class Customer extends Resource
     {
         return [];
     }
+
+    // public function tools()
+    // {
+    //     return [
+    //         new PriceTracker,
+    //     ];
+    // }
 }

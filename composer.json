@@ -13,10 +13,12 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "laravel/cashier": "^12.9",
         "laravel/framework": "^8.12",
         "laravel/nova": "^3.21",
         "laravel/tinker": "^2.5",
-        "mollie/laravel-mollie": "^2.14"
+        "mollie/laravel-mollie": "^2.14",
+        "spatie/laravel-fractal": "^5.8"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -67,5 +69,5 @@
             "type": "composer",
             "url": "https://nova.laravel.com"
         }
-    ]    
+    ]
 }

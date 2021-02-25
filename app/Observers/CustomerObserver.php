@@ -3,7 +3,9 @@
 namespace App\Observers;
 
 use App\Models\Customer;
+use Laravel\Cashier\Cashier;
 use Mollie\Laravel\Facades\Mollie;
+use Stripe\Customer as StripeCustomer;
 
 class CustomerObserver
 {
@@ -15,10 +17,7 @@ class CustomerObserver
      */
     public function creating(Customer $customer)
     {
-        Mollie::api()->customers()->create([
-            'name'  => $customer->name,
-            'email' => $customer->email,
-        ]);
+        StripeCustomer::create($customer->toConsumableArray(), Cashier::stripeOptions());
     }
 
     /**

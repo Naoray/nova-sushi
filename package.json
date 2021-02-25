@@ -7,7 +7,11 @@
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
         "prod": "npm run production",
-        "production": "mix --production"
+        "production": "mix --production",
+        "build-api-paginate": "cd nova-components/ApiPaginate && npm run dev",
+        "build-api-paginate-prod": "cd nova-components/ApiPaginate && npm run prod",
+        "build-custom-index-toolbar": "cd nova-components/CustomIndexToolbar && npm run dev",
+        "build-custom-index-toolbar-prod": "cd nova-components/CustomIndexToolbar && npm run prod"
     },
     "devDependencies": {
         "axios": "^0.21",
