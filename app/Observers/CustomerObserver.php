@@ -4,7 +4,6 @@ namespace App\Observers;
 
 use App\Models\Customer;
 use Laravel\Cashier\Cashier;
-use Mollie\Laravel\Facades\Mollie;
 use Stripe\Customer as StripeCustomer;
 
 class CustomerObserver
@@ -39,6 +38,6 @@ class CustomerObserver
      */
     public function deleting(Customer $customer)
     {
-        Mollie::api()->customers()->delete($customer->id);
+        StripeCustomer::retrieve($customer->id, Cashier::stripeOptions())->delete();
     }
 }

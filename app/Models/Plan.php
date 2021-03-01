@@ -15,11 +15,6 @@ class Plan extends Model
     use HasFactory;
     use Sushi, HasDirectStripeAccess;
 
-    /**
-     * @var bool
-     */
-    public $incrementing = false;
-
     protected $keyType = 'string';
 
     /**
@@ -85,16 +80,6 @@ class Plan extends Model
         return $query->where('active', true);
     }
 
-    // public function scopeSubscribedTo($query, $teamId)
-    // {
-    //     return $query->whereKey(SubscriptionItem::plansSubscribedTo($teamId));
-    // }
-
-    // public function scopeSubscription($query, $subscriptionId)
-    // {
-    //     return $query->whereKey(SubscriptionItem::plansWithSubscription($subscriptionId));
-    // }
-
     public function getNameAttribute()
     {
         return Str::of($this->id)
@@ -105,7 +90,7 @@ class Plan extends Model
     /**
      * Returns all keys of the stripe object.
      */
-    protected function stripeKeys(): array
+    public static function keys(): array
     {
         return [
             'id',

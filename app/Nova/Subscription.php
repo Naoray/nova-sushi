@@ -3,22 +3,27 @@
 namespace App\Nova;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Laravel\Nova\Fields\Boolean;
-use Laravel\Nova\Fields\HasMany;
-use Laravel\Nova\Fields\KeyValue;
+use Laravel\Nova\Fields\BelongsTo;
+use Laravel\Nova\Fields\DateTime;
+use Laravel\Nova\Fields\ID;
+use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
-use Laravel\Nova\Fields\Textarea;
-use Laravel\Nova\Http\Requests\NovaRequest;
 
-class Product extends Resource
+class Subscription extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
      * @var string
      */
-    public static $model = \App\Models\Product::class;
+    public static $model = \App\Models\Subscription::class;
+
+    /**
+     * The single value that should be used to represent the resource when being displayed.
+     *
+     * @var string
+     */
+    public static $title = 'name';
 
     /**
      * The columns that should be searched.
@@ -30,18 +35,6 @@ class Product extends Resource
     ];
 
     /**
-     * Get the value that should be displayed to represent the resource.
-     *
-     * @return string
-     */
-    public function title()
-    {
-        return Str::of($this->name)
-            ->append(' - ' . $this->id)
-            ->__toString();
-    }
-
-    /**
      * Get the fields displayed by the resource.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -50,23 +43,25 @@ class Product extends Resource
     public function fields(Request $request)
     {
         return [
-            Text::make('Id')
-                ->hideWhenCreating()
-                ->readonly(function (NovaRequest $request) {
-                    return $request->isUpdateOrUpdateAttachedRequest();
-                }),
+            ID::make()->sortable(),
 
             Text::make('Name')
                 ->rules('required'),
 
-            Boolean::make('Active'),
+            Text::make('Stripe Id')
+                ->rules('required'),
 
-            Textarea::make('Description'),
+            Text::make('Stripe Status')
+                ->rules('required'),
 
-            HasMany::make('Plans'),
+            Text::make('Stripe Plan'),
 
-            KeyValue::make('Metadata')
-                ->rules('json'),
+            Number::make('Quantity'),
+
+            DateTime::make('Trial Ends At'),
+            DateTime::make('Ends At'),
+
+            BelongsTo::make('User'),
         ];
     }
 

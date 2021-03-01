@@ -100,8 +100,6 @@ class Plan extends Resource
 
             KeyValue::make('Metadata')
                 ->rules('json'),
-
-            $this->metaDataPanel(false),
         ];
     }
 

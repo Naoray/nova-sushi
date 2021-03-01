@@ -4,6 +4,7 @@ namespace App\Nova;
 
 use Laravel\Nova\Fields\ID;
 use Illuminate\Http\Request;
+use Laravel\Nova\Fields\HasOne;
 use Laravel\Nova\Fields\Text;
 
 class Customer extends Resource
@@ -41,6 +42,8 @@ class Customer extends Resource
     {
         return [
             ID::make(__('ID'), 'id')->sortable(),
+
+            HasOne::make('User'),
 
             Text::make('Name'),
             Text::make('Email'),

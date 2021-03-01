@@ -16,9 +16,7 @@
         "laravel/cashier": "^12.9",
         "laravel/framework": "^8.12",
         "laravel/nova": "^3.21",
-        "laravel/tinker": "^2.5",
-        "mollie/laravel-mollie": "^2.14",
-        "spatie/laravel-fractal": "^5.8"
+        "laravel/tinker": "^2.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

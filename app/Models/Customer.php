@@ -2,42 +2,20 @@
 
 namespace App\Models;
 
-use Sushi\Sushi;
-use Illuminate\Database\Eloquent\Model;
-use League\Fractal\TransformerAbstract;
-use App\Transformers\CustomerTransformer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Laravel\Cashier\Cashier;
 use Stripe\Customer as StripeCustomer;
 
-class Customer extends Model
+class Customer extends StripeModel
 {
     use HasFactory;
-    use Sushi, HasDirectStripeAccess;
-
-    /**
-     * @var bool
-     */
-    public $incrementing = false;
-
-    protected $keyType = 'string';
-
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
-    const CREATED_AT = 'created';
-
-    protected $guarded = [];
 
     protected $casts = [
-        'id' => 'string',
-        'invoice_settings' => 'json',
         'created' => 'datetime',
-        'preferred_localse' => 'array',
+        'preferred_locales' => 'array',
+        'invoice_settings' => 'array',
         'metadata' => 'json',
         'address' => 'json',
+        'sources' => 'json',
     ];
 
     /**
@@ -63,20 +41,15 @@ class Customer extends Model
         'tax_exempt',
     ];
 
-    protected function transformer(): TransformerAbstract
+    public static function apiResource(): string
     {
-        return new CustomerTransformer;
-    }
-
-    public function getRows()
-    {
-        return $this->transformToArray(StripeCustomer::all(['limit' => 100], Cashier::stripeOptions()));
+        return StripeCustomer::class;
     }
 
     /**
      * Returns all keys of the stripe object.
      */
-    protected function stripeKeys(): array
+    public static function keys(): array
     {
         return [
             'id',
@@ -100,5 +73,10 @@ class Customer extends Model
             'shipping',
             'tax_exempt',
         ];
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'stripe_id');
     }
 }

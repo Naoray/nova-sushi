@@ -10,11 +10,6 @@ use Stripe\Collection;
 trait HasDirectStripeAccess
 {
     /**
-     * Returns all keys of the stripe object.
-     */
-    abstract protected function stripeKeys(): array;
-
-    /**
      * Boot the has direct Stripe access for a model.
      * This global scope hides the entries we have to
      * create to prevent a Sushi error which always requires
@@ -35,7 +30,7 @@ trait HasDirectStripeAccess
     protected function transformToArray(Collection $stripeData): array
     {
         return Cache::remember(get_class($this), Carbon::parse('5 Minutes'), function () use ($stripeData) {
-            $transformed = collect($stripeData->autoPagingIterator())->map(function ($item) {
+            $transformed = collect($stripeData->data)->map(function ($item) {
                 return collect($item->toArray())
                     ->map(function ($value, $key) {
                         if (is_array($value)) {
@@ -50,7 +45,7 @@ trait HasDirectStripeAccess
             })->all();
 
             if (empty($transformed)) {
-                $transformed = [array_fill_keys($this->stripeKeys(), null)];
+                $transformed = [array_fill_keys(static::keys(), null)];
             }
 
             return $transformed;

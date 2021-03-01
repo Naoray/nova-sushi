@@ -101,7 +101,7 @@ class Product extends Model
     /**
      * Returns all keys of the stripe object.
      */
-    protected function stripeKeys(): array
+    public static function keys(): array
     {
         return [
             'id',

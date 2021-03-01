@@ -14,6 +14,8 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->create(['email' => 'admin@test.com']);
+        User::factory()->create(['email' => 'admin@test.com'])->createAsStripeCustomer();
+
+        collect()->range(1, 5)->each(fn () => User::factory()->create()->createAsStripeCustomer());
     }
 }
