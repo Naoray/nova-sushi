@@ -14,9 +14,6 @@ class Product extends Model
     use HasFactory;
     use Sushi, HasDirectStripeAccess;
 
-    const TYPE_UNIFI = 'unifi';
-    const TYPE_UNMS = 'unms';
-
     /**
      * @var bool
      */
