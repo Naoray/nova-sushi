@@ -3,28 +3,15 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
-use Laravel\Cashier\Cashier;
 use Stripe\Plan as StripePlan;
 use Sushi\Sushi;
 
-class Plan extends Model
+class Plan extends StripeModel
 {
     use HasFactory;
-    use Sushi, HasDirectStripeAccess;
-
-    protected $keyType = 'string';
-
-    /**
-     * The name of the "created at" column.
-     *
-     * @var string
-     */
-    const CREATED_AT = 'created';
-
-    protected $guarded = [];
+    use Sushi;
 
     protected $casts = [
         'id' => 'string',
@@ -48,11 +35,7 @@ class Plan extends Model
 
     public function getRows()
     {
-        return $this->transformToArray(
-            config('app.env') !== 'testing'
-                ? StripePlan::all(['limit' => 100], Cashier::stripeOptions())
-                : []
-        );
+        return $this->getConvertedRows(StripePlan::class);
     }
 
     /**
@@ -63,21 +46,6 @@ class Plan extends Model
     public function stripeProduct(): BelongsTo
     {
         return $this->belongsTo(Product::class, 'product');
-    }
-
-    /**
-     * Get the subscription items related to the subscription.
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function items()
-    {
-        return $this->hasMany(SubscriptionItem::class, 'stripe_plan');
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('active', true);
     }
 
     public function getNameAttribute()

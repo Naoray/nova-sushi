@@ -6,12 +6,9 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Laravel\Cashier\Cashier;
 use Stripe\Collection;
-use Sushi\Sushi;
 
 abstract class StripeModel extends Model
 {
-    use Sushi;
-
     protected $keyType = 'string';
     public $incrementing = false;
 
@@ -23,23 +20,14 @@ abstract class StripeModel extends Model
     }
 
     /**
-     * Get stripe api resource class.
-     *
-     * @return string
-     */
-    abstract public static function apiResource(): string;
-
-    /**
      * Returns all keys of the stripe object.
      *
      * @return array
      */
     abstract public static function keys(): array;
 
-    public function getRows()
+    public function getConvertedRows(string $apiResource)
     {
-        $apiResource = static::apiResource();
-
         return $this->transformToArray($apiResource::all(['limit' => 100], Cashier::stripeOptions()));
     }
 
@@ -62,6 +50,13 @@ abstract class StripeModel extends Model
         return $transformed;
     }
 
+    /**
+     * Cast incoming stripe data into sqlite conformable data.
+     *
+     * @param [type] $key
+     * @param [type] $value
+     * @return void
+     */
     protected function castStripeData($key, $value)
     {
         if (is_array($value)) {
@@ -82,18 +77,13 @@ abstract class StripeModel extends Model
     public function toConsumableArray(): array
     {
         return collect($this->toArray())
-            // ->map(function ($value, $key) {
-            //     return $this->castObjectToArray($value, $key);
-            // })
             ->all();
     }
 
-    private function castObjectToArray($value, string $key)
+    public function getUpdatetableAttributes(): array
     {
-        if (is_object($value) && array_key_exists($key, $this->casts)) {
-            $value = (array)$value;
-        }
-
-        return $value;
+        return  collect($this->getDirty())
+            ->filter(fn ($value, $key) => in_array($key, self::$updateable))
+            ->all();
     }
 }

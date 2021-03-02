@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Stripe\Customer as StripeCustomer;
+use Sushi\Sushi;
 
 class Customer extends StripeModel
 {
     use HasFactory;
+    use Sushi;
 
     protected $casts = [
         'created' => 'datetime',
@@ -41,9 +43,9 @@ class Customer extends StripeModel
         'tax_exempt',
     ];
 
-    public static function apiResource(): string
+    public function getRows()
     {
-        return StripeCustomer::class;
+        return $this->getConvertedRows(StripeCustomer::class);
     }
 
     /**

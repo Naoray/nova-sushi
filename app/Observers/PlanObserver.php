@@ -39,9 +39,7 @@ class PlanObserver
             return;
         }
 
-        $attributes = collect($plan->getDirty())
-            ->filter(fn ($value, $key) => in_array($key, Plan::$updateable))
-            ->all();
+        $attributes = $plan->getUpdatetableAttributes();
 
         if (!empty($attributes)) {
             StripePlan::update($plan->id, $attributes, Cashier::stripeOptions());
